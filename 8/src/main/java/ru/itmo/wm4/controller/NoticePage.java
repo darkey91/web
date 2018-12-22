@@ -22,7 +22,7 @@ public class NoticePage extends Page {
         this.noticeService = noticeService;
     }
 
-    @AnyRole(Role.Name.ADMIN)
+    @AnyRole({Role.Name.USER, Role.Name.ADMIN})
     @GetMapping(path = "/notice")
     public String noticeGet(Model model) {
         model.addAttribute("notice", new Notice());
@@ -38,7 +38,10 @@ public class NoticePage extends Page {
         if (bindingResult.hasErrors()) {
             return "CreateNoticePage";
         }
-
+        if (notice.getText().isEmpty()) {
+            model.addAttribute("textError", "Text can't be empty");
+            return "CreateNoticePage";
+        }
         if (tagsParameter.isEmpty()) {
             model.addAttribute("tagError", "String can't be empty");
             return "CreateNoticePage";

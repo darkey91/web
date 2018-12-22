@@ -14,7 +14,7 @@ import javax.servlet.http.HttpSession;
 
 @Controller
 public class NoticesPage extends Page {
-    @AnyRole(Role.Name.ADMIN)
+    @AnyRole({Role.Name.USER, Role.Name.ADMIN})
     @GetMapping(path = "/notices")
     public String notices(Model model, HttpSession httpSession) {
         User user = getUser(httpSession);

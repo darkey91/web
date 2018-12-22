@@ -1,6 +1,7 @@
 package ru.itmo.wm4.service;
 
 import org.springframework.stereotype.Service;
+import ru.itmo.wm4.domain.Role;
 import ru.itmo.wm4.domain.User;
 import ru.itmo.wm4.form.UserCredentials;
 import ru.itmo.wm4.repository.UserRepository;

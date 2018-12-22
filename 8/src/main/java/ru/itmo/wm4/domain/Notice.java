@@ -19,9 +19,9 @@ public class Notice {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @NotNull
-    @NotEmpty
-    @Size(min = 1, max = 5000)
+        @NotNull
+    //@NotEmpty
+   // @Size(min = 1, max = 5000)
     @Lob
     private String text;
 
@@ -36,7 +36,7 @@ public class Notice {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "notice", fetch = FetchType.LAZY)
     private List<Comment> comments;
 
-    //Поч тут eager
+
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "notice_tag",
                 joinColumns = @JoinColumn(name = "notice_id", referencedColumnName = "id"),

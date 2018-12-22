@@ -32,6 +32,8 @@
                     <textarea id="tags" rows="4" name="tagsString"></textarea>
                 </div>
                 <div class="error">${tagError!}</div>
+                <div class="error">${textError!}</div>
+
             </div>
 
             <div class="button-field">

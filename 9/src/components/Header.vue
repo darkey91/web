@@ -21,9 +21,10 @@
         <nav>
             <ul>
                 <li><a href="#page=Index" @click="changePage('Index')">Home</a></li>
-                <li><a href="#page=UsersList" @click="changePage('UsersList')">Users</a></li>
                 <li v-if="userId"><a href="#page=AddPost" @click="changePage('AddPost')">Add Post</a></li>
                 <li v-if="userId"><a href="#page=EditPost" @click="changePage('EditPost')">Edit Post</a></li>
+                <li><a href="#page=Users" @click="changePage('Users')">Users</a></li>
+
             </ul>
         </nav>
     </header>
@@ -35,7 +36,6 @@
         name: "Header",
         beforeCreate() {
             this.$root.$on("onEnterSuccess", () => {
-                alert(this.props.find("users"));
                 this.changePage('Index');
             });
         },

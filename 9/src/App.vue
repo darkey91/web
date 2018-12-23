@@ -2,8 +2,7 @@
     <!--suppress HtmlUnknownTag -->
     <body id="app">
     <Header :userId="userId" :users="users"/>
-    <Middle :users="users" :posts="posts"/>
-
+    <Middle :users="users" :posts="posts" :comments="comments"/>
     <Footer/>
     </body>
 </template>
@@ -23,26 +22,43 @@
             Middle,
             Footer
         }, beforeCreate() {
+            this.$root.$on("OnRegisterUser", (login, name) => {
+                let loginRegExp = /^[a-z]+$/;
+                let nameRegExp = /^[a-zA-Z' ']+$/;
+                if (!login || login.length < 3 || login.length > 16 || !loginRegExp.test(login)) {
+                    this.$root.$emit("onRegisterValidationError", "Login is invalid.");
+                } else if (!name  || name.length < 1 || name.length > 32 || !nameRegExp.test(name)) {
+                    this.$root.$emit("onRegisterValidationError", "Name is invalid.");
+                } else if (Object.values(this.users).filter(u => u.login === login).length > 0) {
+                    this.$root.$emit("onRegisterValidationError", "Login is already in use.");
+                } else {
+                    const id = Math.max(...Object.keys(this.users))+ 1;
+                    this.$set(this.users, id, {
+                        id,
+                        login,
+                        name,
+                    });
+                    this.$root.$emit("onChangePage", "Enter");
+                }
+            });
+
             this.$root.$on("onLogout", () => {
                 this.userId = null;
             });
-
             this.$root.$on("onEnter", (login) => {
                 let users = Object.values(this.users).filter(u => u.login === login);
                 if (users.length) {
                     this.userId = users[0].id;
-                    alert(users[0].name);
                     this.$root.$emit("onEnterSuccess");
                 } else {
                     this.$root.$emit("onEnterValidationError", "Invalid login/password.");
                 }
             });
-
             this.$root.$on("onAddPost", (title, text) => {
                 if (this.userId) {
-                    if (!title || title.length > 10) {
+                    if (!title || title.length > 5) {
                         this.$root.$emit("onAddPostValidationError", "Title is invalid");
-                    } else if (!text || text.length > 20) {
+                    } else if (!text || text.length > 10) {
                         this.$root.$emit("onAddPostValidationError", "Text is invalid");
                     } else {
                         const id = Math.max(...Object.keys(this.posts)) + 1;
@@ -51,34 +67,12 @@
                             userId: this.userId,
                             title,
                             text
-                        });
+                        })
                     }
                 } else {
                     this.$root.$emit("onAddPostValidationError", "No access");
                 }
             });
-
-            this.$root.$on("OnRegisterUser", (login, name) => {
-                let loginRegExp = /^[a-z]+$/;
-                let nameRegExp = /^[a-zA-Z" "]+$/;
-                if (!login || login.length < 3 || login.length > 16 || !loginRegExp.test(login)) {
-                    this.$root.$emit("onRegisterValidationError", "Login is invalid.");
-                } else if (!name  || name.length < 1 || name.length > 32 || !nameRegExp.test(name)) {
-                    this.$root.$emit("onRegisterValidationError", "Name is invalid.");
-                } else if (Object.values(this.users).filter(u => u.login === login).length) {
-                    this.$root.$emit("onRegisterValidationError", "Login is already in use.");
-                } else {
-                    const id = Math.max(...Object.keys(this.users) + 1);
-                    this.$set(this.users, id, {
-                        id,
-                        login,
-                        name,
-                    });
-                    this.userId = id;
-                    this.$root.$emit("onEnter", login);
-                }
-            });
-
             this.$root.$on("onEditPost", (id, text) => {
                 if (this.userId) {
                     if (!id) {
@@ -99,8 +93,6 @@
                     this.$root.$emit("onEditPostValidationError", "No access");
                 }
             });
-
-
         }
     }
 </script>

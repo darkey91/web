@@ -1,7 +1,7 @@
 <template>
     <section>
         <div class="header">
-            By {{user.login}}
+            By {{users[post.userId].login}}
         </div>
         <div class="body">
             {{post.text}}
@@ -15,7 +15,7 @@
 
 <script>
     export default {
-        props: ['user', 'post'],
+        props: ['users', 'post'],
         name: "SidebarPost"
     }
 </script>
